@@ -40,4 +40,10 @@
         android:text="@string/del_contact"
         android:onClick="del_contact" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_sms_test"
+        android:onClick="send_SMStest" />
+
 </LinearLayout>

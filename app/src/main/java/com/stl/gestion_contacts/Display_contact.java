@@ -10,6 +10,7 @@ public class Display_contact extends AppCompatActivity {
 
     Contact contact;
     int index;
+    SMS_Sender sms_sender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +19,7 @@ public class Display_contact extends AppCompatActivity {
 
         contact = (Contact) getIntent().getSerializableExtra("EXTRA_CONTACT");
         index = getIntent().getIntExtra("CONTACT_POSITION", -1);
+        sms_sender = new SMS_Sender(this);
 
         TextView name = findViewById(R.id.name);
         TextView num_tel = findViewById(R.id.contact_num);
@@ -29,7 +31,11 @@ public class Display_contact extends AppCompatActivity {
     }
 
     public void del_contact (View view) {
-        MainActivity.remove_contact(index);
+        MainActivity.contactManager.remove_contact(index);
         finish();
+    }
+
+    public void send_SMStest (View view) {
+        sms_sender.send_SMS(contact, "Message test application !");
     }
 }

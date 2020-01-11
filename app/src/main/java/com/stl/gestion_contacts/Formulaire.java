@@ -28,7 +28,7 @@ public class Formulaire extends AppCompatActivity {
 
         Contact new_contact = new Contact(nom, prenom, num_tel, mail);
 
-        MainActivity.add_contact(new_contact);
+        MainActivity.contactManager.add_contact(new_contact);
         finish();
     }
 

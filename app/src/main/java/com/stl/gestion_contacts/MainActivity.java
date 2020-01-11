@@ -1,87 +1,57 @@
 package com.stl.gestion_contacts;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import android.util.Log;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.view.View;
 import android.content.Intent;
 
 import android.os.Bundle;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static ContactManager contactManager;
     private static String contacts_filename = "contacts.txt";
-
     private static ListView contactListView;
-    public static ArrayList<Contact> contactList = new ArrayList<>();
-    public static ArrayAdapter<Contact> contactAdapter;
-
-    private static InternalStorage internalStorage;
+    public static final int SMS_PERMISSIONS_REQUEST = 1;
+    public static boolean allow_sms = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        internalStorage = new InternalStorage(this);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.SEND_SMS},
+                    SMS_PERMISSIONS_REQUEST);
 
-        try {
-            // Retrieve the list from internal storage
-            contactList = (ArrayList<Contact>) internalStorage.readObject(
-                    contacts_filename,
-                    "MainActivity onCreate");
         }
-        catch (IOException e) {
-            contactList = new ArrayList();
+        else {
+            allow_sms = true;
         }
+
+        contactManager = new ContactManager(this, contacts_filename);
 
         contactListView = findViewById(R.id.contactListView);
-        contactAdapter = new ContactAdapter(
-                this,
-                R.layout.item_contact,
-                contactList);
-        contactListView.setAdapter(contactAdapter);
+
+        contactListView.setAdapter(contactManager.contactAdapter);
 
         contactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                open_contact(contactAdapter.getItem(index), index);
+                open_contact(contactManager.contactAdapter.getItem(index), index);
             }
         });
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        contactAdapter.notifyDataSetChanged();
     }
-
-    public static void add_contact(Contact contact) {
-        contactList.add(contact);
-        contactAdapter.notifyDataSetChanged();
-        save_contacts();
-    }
-
-    public static void remove_contact(int position) {
-        contactList.remove(position);
-        contactAdapter.notifyDataSetChanged();
-        save_contacts();
-    }
-
-    private static void save_contacts () {
-        // Save the list of entries to internal storage
-        internalStorage.writeObject(
-                contacts_filename,
-                contactList,
-                "save_contacts() MainActivity");
-    }
-
 
     public void open_formulaire_contact (View view) {
         Intent intent = new Intent(this, Formulaire.class);
@@ -94,4 +64,29 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("CONTACT_POSITION", index);
         startActivity(intent);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case SMS_PERMISSIONS_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    allow_sms = true;
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    allow_sms = false;
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+    }
+
 }
