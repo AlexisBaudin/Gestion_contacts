@@ -33,7 +33,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         }
 
         TextView name = convertView.findViewById(R.id.name);
-        name.setText(contact.nom + " " + contact.prenom);
+        name.setText(contact.prenom + " " + contact.nom);
 
         return convertView;
     }

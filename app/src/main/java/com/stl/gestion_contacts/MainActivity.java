@@ -1,6 +1,8 @@
 package com.stl.gestion_contacts;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
 import android.content.Intent;
 
@@ -9,20 +11,35 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Array of strings...
-    private ListView contactListView;
-    public static List<Contact> contactList = new ArrayList<>();
+    private static String contacts_filename = "contacts.txt";
+
+    private static ListView contactListView;
+    public static ArrayList<Contact> contactList = new ArrayList<>();
     public static ArrayAdapter<Contact> contactAdapter;
+
+    private static InternalStorage internalStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        internalStorage = new InternalStorage(this);
+
+        try {
+            // Retrieve the list from internal storage
+            contactList = (ArrayList<Contact>) internalStorage.readObject(
+                    contacts_filename,
+                    "MainActivity onCreate");
+        }
+        catch (IOException e) {
+            contactList = new ArrayList();
+        }
 
         contactListView = findViewById(R.id.contactListView);
         contactAdapter = new ContactAdapter(
@@ -44,6 +61,27 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         contactAdapter.notifyDataSetChanged();
     }
+
+    public static void add_contact(Contact contact) {
+        contactList.add(contact);
+        contactAdapter.notifyDataSetChanged();
+        save_contacts();
+    }
+
+    public static void remove_contact(int position) {
+        contactList.remove(position);
+        contactAdapter.notifyDataSetChanged();
+        save_contacts();
+    }
+
+    private static void save_contacts () {
+        // Save the list of entries to internal storage
+        internalStorage.writeObject(
+                contacts_filename,
+                contactList,
+                "save_contacts() MainActivity");
+    }
+
 
     public void open_formulaire_contact (View view) {
         Intent intent = new Intent(this, Formulaire.class);

@@ -29,8 +29,7 @@ public class Display_contact extends AppCompatActivity {
     }
 
     public void del_contact (View view) {
-        MainActivity.contactList.remove(index);
-        MainActivity.contactAdapter.notifyDataSetChanged();
+        MainActivity.remove_contact(index);
         finish();
     }
 }
