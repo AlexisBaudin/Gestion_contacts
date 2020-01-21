@@ -25,7 +25,6 @@ public class SMS_Sender {
 
         }
         else {
-
             AlertDialog alertDialog = new AlertDialog.Builder(context).create();
             alertDialog.setTitle("Autorisation SMS");
             alertDialog.setMessage("Veuillez autoriser l'application à envoyer des SMS.");
