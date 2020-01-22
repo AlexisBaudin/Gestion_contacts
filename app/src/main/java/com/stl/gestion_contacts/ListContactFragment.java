@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-public class ListContactFragment extends Fragment {
+public class ListContactFragment extends MainFragment {
 
     private static ListView contactListView;
     private Context context;
@@ -30,18 +30,18 @@ public class ListContactFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
 
         contactListView = view.findViewById(R.id.contactListView);
-        contactListView.setAdapter(MainActivity.cm.contactAdapter);
+        contactListView.setAdapter(MainActivity.cm.getObjectAdapter());
         contactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                open_contact(MainActivity.cm.contactAdapter.getItem(index), index);
+                open_contact(MainActivity.cm.getObjectAdapter().getItem(index), index);
             }
         });
         return view;
     }
 
     public void open_contact (Contact contact, int index) {
-        Intent intent = new Intent(context, Display_contact.class);
+        Intent intent = new Intent(context, ContactActivity.class);
         intent.putExtra("EXTRA_CONTACT", contact);
         intent.putExtra("CONTACT_POSITION", index);
         startActivity(intent);

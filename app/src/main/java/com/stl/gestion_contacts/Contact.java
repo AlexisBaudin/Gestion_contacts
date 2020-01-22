@@ -2,7 +2,7 @@ package com.stl.gestion_contacts;
 
 import java.io.Serializable;
 
-public class Contact implements Serializable {
+public class Contact implements Serializable, Printable {
     String nom;
     String prenom;
     String num_tel;
@@ -15,4 +15,8 @@ public class Contact implements Serializable {
         this.mail = mail;
     }
 
+    @Override
+    public String getText() {
+        return prenom + " " + nom;
+    }
 }

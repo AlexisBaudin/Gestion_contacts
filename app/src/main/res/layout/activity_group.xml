@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Display_contact">
+    tools:context=".GroupActivity">
 
     <TextView
         android:id="@+id/name"
@@ -14,36 +14,17 @@
         android:layout_gravity="center"
         android:textSize="20dp"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/contact_tel"/>
-
-    <TextView
-        android:id="@+id/contact_num"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/contact_mail"/>
-
-    <TextView
-        android:id="@+id/contact_mail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/del_contact"
-        android:onClick="del_contact" />
+        android:text="@string/del_group"
+        android:onClick="delGroup" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/contact_sms_test"
-        android:onClick="send_SMStest" />
+        android:onClick="sendSMStest" />
 
 </LinearLayout>

@@ -1,24 +1,31 @@
 package com.stl.gestion_contacts;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.view.View;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.widget.ListView;
+import android.widget.EditText;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
-    public static ContactManager cm;
+    public static  ObjectManager<Contact> cm;
+    public static ObjectManager<Group> gm;
     public static final int SMS_PERMISSIONS_REQUEST = 1;
     public static boolean allow_sms = false;
 
@@ -49,18 +56,50 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                open_formulaire_contact(view);
+                FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+                List<Fragment> fragments = fragmentManager.getFragments();
+                for(Fragment fragment : fragments){
+                    if(fragment != null && fragment.getUserVisibleHint())
+                        if (fragment instanceof ListContactFragment)
+                            open_formulaire_contact(view);
+                        else if (fragment instanceof  ListGroupFragment)
+                            creerGroupe();
+                }
             }
         });
 
-        cm = new ContactManager(this);
-
+        cm = new ObjectManager<Contact>(this, "contacts.txt", R.layout.item_contact);
+        gm = new ObjectManager<Group>(this, "groups.txt", R.layout.item_group);
 
     }
 
+    public MainFragment getVisibleFragment(){
+
+        return null;
+    }
+
     public void open_formulaire_contact (View view) {
-        Intent intent = new Intent(this, Formulaire.class);
+        Intent intent = new Intent(this, FormulaireActivity.class);
         startActivity(intent);
+    }
+
+    private void creerGroupe() {
+        final EditText taskEditText = new EditText(this);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Nouveau Groupe")
+                .setMessage("Entrez un nom")
+                .setView(taskEditText)
+                .setPositiveButton("CREER", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = String.valueOf(taskEditText.getText());
+                        gm.addObject(new Group(name));
+
+                    }
+                })
+                .setNegativeButton("ANNULER", null)
+                .create();
+        dialog.show();
     }
 
 

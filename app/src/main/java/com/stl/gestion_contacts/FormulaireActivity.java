@@ -6,13 +6,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import java.util.InvalidPropertiesFormatException;
-
-public class Formulaire extends AppCompatActivity {
+public class FormulaireActivity extends AppCompatActivity {
 
     private EditText editNom;
     private EditText editPrenom;
@@ -27,7 +24,7 @@ public class Formulaire extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.formulaire);
+        setContentView(R.layout.activity_formulaire);
 
         editNom = findViewById(R.id.nom);
         editPrenom = findViewById(R.id.prenom);
@@ -132,13 +129,13 @@ public class Formulaire extends AppCompatActivity {
 
         if (formulaireValide) {
             Contact newContact = new Contact(nom, prenom, numTel, mail);
-            MainActivity.cm.add_contact(newContact);
+            MainActivity.cm.addObject(newContact);
             finish();
         }
         else {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Formulaire invalide");
-            alertDialog.setMessage("Il y a des erreurs dans le formulaire. " +
+            alertDialog.setMessage("Il y a des erreurs dans le activity_formulaire. " +
                     "Veuillez vérifier les informations svp.");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
