@@ -13,18 +13,17 @@ public class ContactManager {
 
     private Context context;
     private InternalStorage internalStorage;
-    private String contacts_filename;
+    public final static String CONTACTS_FILENAME = "contacts.txt";
 
-    ContactManager(Context context, String contacts_filename) {
+    ContactManager(Context context) {
 
         this.context = context;
-        this.contacts_filename = contacts_filename;
 
         internalStorage = new InternalStorage(context);
         try {
             // Retrieve the list from internal storage
             contactList = (ArrayList<Contact>) internalStorage.readObject(
-                    contacts_filename,
+                    CONTACTS_FILENAME,
                     "MainActivity onCreate");
         }
         catch (IOException e) {
@@ -53,7 +52,7 @@ public class ContactManager {
     private void save_contacts () {
         // Save the list of entries to internal storage
         internalStorage.writeObject(
-                contacts_filename,
+                CONTACTS_FILENAME,
                 contactList,
                 "save_contacts() MainActivity");
     }

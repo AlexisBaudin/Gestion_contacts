@@ -3,6 +3,7 @@ package com.stl.gestion_contacts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -10,14 +11,14 @@ import android.view.View;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static ContactManager contactManager;
-    private static String contacts_filename = "contacts.txt";
-    private static ListView contactListView;
+    public static ContactManager cm;
     public static final int SMS_PERMISSIONS_REQUEST = 1;
     public static boolean allow_sms = false;
 
@@ -38,18 +39,22 @@ public class MainActivity extends AppCompatActivity {
             allow_sms = true;
         }
 
-        contactManager = new ContactManager(this, contacts_filename);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
+        FloatingActionButton fab = findViewById(R.id.fab);
 
-        contactListView = findViewById(R.id.contactListView);
-
-        contactListView.setAdapter(contactManager.contactAdapter);
-
-        contactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                open_contact(contactManager.contactAdapter.getItem(index), index);
+            public void onClick(View view) {
+                open_formulaire_contact(view);
             }
         });
+
+        cm = new ContactManager(this);
+
 
     }
 
@@ -58,12 +63,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void open_contact (Contact contact, int index) {
-        Intent intent = new Intent(this, Display_contact.class);
-        intent.putExtra("EXTRA_CONTACT", contact);
-        intent.putExtra("CONTACT_POSITION", index);
-        startActivity(intent);
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -88,5 +88,4 @@ public class MainActivity extends AppCompatActivity {
             // permissions this app might request.
         }
     }
-
 }

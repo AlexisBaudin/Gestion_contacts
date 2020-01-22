@@ -132,7 +132,7 @@ public class Formulaire extends AppCompatActivity {
 
         if (formulaireValide) {
             Contact newContact = new Contact(nom, prenom, numTel, mail);
-            MainActivity.contactManager.add_contact(newContact);
+            MainActivity.cm.add_contact(newContact);
             finish();
         }
         else {
