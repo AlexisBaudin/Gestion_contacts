@@ -57,13 +57,8 @@ public class ObjectManager<T> {
         saveObjects();
     }
 
-    public void removeObject(Object t) {
-        objectsList.remove(t);
-        objectAdapter.notifyDataSetChanged();
-        saveObjects();
-    }
 
-    private void saveObjects () {
+    public void saveObjects () {
         // Save the list of entries to internal storage
         internalStorage.writeObject(
                 filename,

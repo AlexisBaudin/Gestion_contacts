@@ -35,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
     static ObjectManager<Contact> cm;
     /** Manager des groupes */
     static ObjectManager<Group> gm;
-    /** Manager des contacts pour chaque groupe, identifié par son nom */
-    static Map<String,ObjectManager<Contact>> cgm;
+    /** Manager des contacts pour chaque groupe, identifié par son nom.
+     * Garde en mémoire les index du ContactManager*/
+    static Map<String,ObjectManager<Integer>> cgm;
 
     public static final int SMS_PERMISSIONS_REQUEST = 1;
     public static boolean allow_sms = false;
@@ -88,9 +89,10 @@ public class MainActivity extends AppCompatActivity {
         gm = new ObjectManager<Group>(this, "groups.txt", R.layout.item_group);
         cgm = new HashMap<>();
         for (Group g : gm.getObjectsList()) {
-            cgm.put(g.getName(), new ObjectManager<Contact>(this, "group_"+g.getName()+".txt", R.layout.item_contact));
+            cgm.put(g.getName(), new ObjectManager<Integer>(this, "group_"+g.getName()+".txt", R.layout.item_contact));
 
         }
+        printState();
     }
 
     public void open_formulaire_contact (View view) {
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             Group g = new Group(name);
                             gm.addObject(g);
-                            cgm.put(g.getName(), new ObjectManager<Contact>(MainActivity.this, "group_"+name+".txt", R.layout.item_contact));
+                            cgm.put(g.getName(), new ObjectManager<Integer>(MainActivity.this, "group_"+name+".txt", R.layout.item_contact));
                             dialog.dismiss();
                         }
                     }
@@ -171,6 +173,32 @@ public class MainActivity extends AppCompatActivity {
 
             // other 'case' lines to check for other
             // permissions this app might request.
+        }
+    }
+
+    public void printState() {
+        System.out.println("\n==========================");
+        System.out.println("Contacts");
+        System.out.println("==========================");
+        for (Contact c : cm.getObjectsList()) {
+            System.out.println(c.getText());
+        }
+        System.out.println("==========================");
+        System.out.println("Groups");
+        System.out.println("==========================");
+        for (Group g : gm.getObjectsList()) {
+            System.out.println(g.getName());
+        }
+        System.out.println("==========================");
+        System.out.println("Groups Composition");
+        System.out.println("==========================");
+        for (Group g : gm.getObjectsList()) {
+            System.out.print(g.getName() + " ==>");
+            System.out.println(cgm.get(g.getName()).getObjectsList().size());
+            for (Integer i : cgm.get(g.getName()).getObjectsList()) {
+                System.out.print(i + " | ");
+            }
+            System.out.println();
         }
     }
 }

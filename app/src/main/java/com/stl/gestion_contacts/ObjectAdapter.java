@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-public  class ObjectAdapter<T extends Printable> extends ArrayAdapter<T> {
+public  class ObjectAdapter<T> extends ArrayAdapter<T> {
     private final List<T> objects;
     private final int layoutResource;
 
@@ -33,8 +33,14 @@ public  class ObjectAdapter<T extends Printable> extends ArrayAdapter<T> {
             convertView = LayoutInflater.from(getContext()).inflate(this.layoutResource, null);
         }
 
-        TextView text = convertView.findViewById(R.id.text);
-        text.setText(t.getText());
+        if (t instanceof Printable) {
+            TextView text = convertView.findViewById(R.id.text);
+            text.setText(((Printable)(t)).getText());
+        }
+        if (t instanceof Integer) {
+            TextView text = convertView.findViewById(R.id.text);
+            text.setText((MainActivity.cm.getObjectsList().get((Integer) (t))).getText());
+        }
 
         return convertView;
     }

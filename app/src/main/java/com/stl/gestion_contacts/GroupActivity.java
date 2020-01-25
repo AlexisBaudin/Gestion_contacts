@@ -26,16 +26,16 @@ public class GroupActivity extends AppCompatActivity {
 
         setTitle(group.getName());
 
-        ListView contacts = findViewById(R.id.contactListView);
+        ListView listView = findViewById(R.id.contactListView);
 
 
-        final ArrayAdapter<Contact> adapter = MainActivity.cgm.get(group.getName()).getObjectAdapter();
+        final ArrayAdapter<Integer> adapter = MainActivity.cgm.get(group.getName()).getObjectAdapter();
 
-        contacts.setAdapter(adapter);
-        contacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                open_contact(adapter.getItem(index), index);
+                open_contact(MainActivity.cm.getObjectsList().get(adapter.getItem(index)), adapter.getItem(index));
             }
         });
 
@@ -43,12 +43,13 @@ public class GroupActivity extends AppCompatActivity {
 
     public void delGroup (View view) {
         MainActivity.gm.removeObject(index);
+        MainActivity.cgm.remove(this.group.getName());
         finish();
     }
 
     public void sendSMStest (View view) {
-        for (Contact c : MainActivity.cgm.get(group.getName()).getObjectsList()) {
-            sms_sender.send_SMS(c, "Message test application !");
+        for (Integer i : MainActivity.cgm.get(group.getName()).getObjectsList()) {
+            sms_sender.send_SMS(MainActivity.cm.getObjectsList().get(i), "Message test application !");
         }
     }
 

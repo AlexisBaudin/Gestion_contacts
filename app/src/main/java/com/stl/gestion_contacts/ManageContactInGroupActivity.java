@@ -5,7 +5,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ManageContactInGroupActivity extends AppCompatActivity {
@@ -24,17 +27,17 @@ public class ManageContactInGroupActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.contactListView);
         listView.setItemsCanFocus(false);
 
-        ManageContactInGroupAdapter adapter = new ManageContactInGroupAdapter(this, R.layout.item_manage_contact, MainActivity.cm.getObjectsList(), group);
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < MainActivity.cm.getObjectsList().size(); i++) {
+            list.add(i);
+        }
+
+        ManageContactInGroupAdapter adapter = new ManageContactInGroupAdapter(this, R.layout.item_manage_contact, list, group);
         listView.setAdapter(adapter);
 
     }
 
     public void save(View view) {
-        /*MainActivity.cgm.get(group.getName()).clear();
-
-        for (Contact c :checked) {
-            MainActivity.cgm.get(group.getName()).addObject(c);
-        }*/
         finish();
     }
 
