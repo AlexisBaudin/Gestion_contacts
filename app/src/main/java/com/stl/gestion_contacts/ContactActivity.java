@@ -16,16 +16,15 @@ public class ContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
-
         contact = (Contact) getIntent().getSerializableExtra("EXTRA_CONTACT");
         index = getIntent().getIntExtra("CONTACT_POSITION", -1);
         sms_sender = new SMS_Sender(this);
 
-        TextView name = findViewById(R.id.name);
+        setTitle(contact.getText());
+
         TextView num_tel = findViewById(R.id.contact_num);
         TextView mail = findViewById(R.id.contact_mail);
 
-        name.setText(contact.prenom + " " + contact.nom);
         num_tel.setText(contact.num_tel);
         mail.setText(contact.mail);
     }

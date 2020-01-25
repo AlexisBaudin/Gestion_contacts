@@ -10,8 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ContactActivity"
-            android:label="@string/page_contact"/>
+            android:name=".ContactActivity" />
         <activity
             android:name=".FormulaireActivity"
             android:label="@string/page_formulaire" />
@@ -23,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".GroupActivity" />
+        <activity android:name="ManageContactInGroupActivity" />
     </application>
 
 

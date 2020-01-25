@@ -7,14 +7,6 @@
     android:orientation="vertical"
     tools:context=".GroupActivity">
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="20dp"/>
-
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,5 +18,19 @@
         android:layout_height="wrap_content"
         android:text="@string/contact_sms_test"
         android:onClick="sendSMStest" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/manage_contacts"
+        android:onClick="manageContacts" />
+
+    <ListView
+        android:id="@+id/contactListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+
+    </ListView>
 
 </LinearLayout>

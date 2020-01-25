@@ -11,21 +11,33 @@ import androidx.viewpager.widget.ViewPager;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.text.InputType;
 import android.view.View;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static  ObjectManager<Contact> cm;
-    public static ObjectManager<Group> gm;
+    /* ******************************************************
+     * Managers pour les données stockées et listées
+     * *****************************************************/
+    /** Manager des contacts */
+    static ObjectManager<Contact> cm;
+    /** Manager des groupes */
+    static ObjectManager<Group> gm;
+    /** Manager des contacts pour chaque groupe, identifié par son nom */
+    static Map<String,ObjectManager<Contact>> cgm;
+
     public static final int SMS_PERMISSIONS_REQUEST = 1;
     public static boolean allow_sms = false;
 
@@ -53,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.fab);
 
+
+        /**
+         * Création d'un nouveau groupe ou contact
+         */
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,19 +79,18 @@ public class MainActivity extends AppCompatActivity {
                         if (fragment instanceof ListContactFragment)
                             open_formulaire_contact(view);
                         else if (fragment instanceof  ListGroupFragment)
-                            creerGroupe();
+                            createGroup();
                 }
             }
         });
 
         cm = new ObjectManager<Contact>(this, "contacts.txt", R.layout.item_contact);
         gm = new ObjectManager<Group>(this, "groups.txt", R.layout.item_group);
+        cgm = new HashMap<>();
+        for (Group g : gm.getObjectsList()) {
+            cgm.put(g.getName(), new ObjectManager<Contact>(this, "group_"+g.getName()+".txt", R.layout.item_contact));
 
-    }
-
-    public MainFragment getVisibleFragment(){
-
-        return null;
+        }
     }
 
     public void open_formulaire_contact (View view) {
@@ -83,23 +98,54 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void creerGroupe() {
+    private void createGroup() {
         final EditText taskEditText = new EditText(this);
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Nouveau Groupe")
-                .setMessage("Entrez un nom")
-                .setView(taskEditText)
-                .setPositiveButton("CREER", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String name = String.valueOf(taskEditText.getText());
-                        gm.addObject(new Group(name));
+        taskEditText.setHint(R.string.name_group);
+        taskEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
-                    }
-                })
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Nouveau Groupe")
+                .setView(taskEditText)
+                .setPositiveButton("CREER", null)
                 .setNegativeButton("ANNULER", null)
                 .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        String name;
+                        name = String.valueOf(taskEditText.getText());
+                        if (name.equals("")) {
+                            taskEditText.setError("Entrez un nom");
+                        }
+                        else if (alreadyExistsGroup(name)) {
+                            taskEditText.setError("Ce groupe existe déjà");
+                        }
+                        else {
+                            Group g = new Group(name);
+                            gm.addObject(g);
+                            cgm.put(g.getName(), new ObjectManager<Contact>(MainActivity.this, "group_"+name+".txt", R.layout.item_contact));
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
         dialog.show();
+    }
+
+    public boolean alreadyExistsGroup(String name) {
+        for (Group g : gm.getObjectsList()) {
+            if (g.getName().equals(name))
+                return true;
+        }
+        return false;
     }
 
 

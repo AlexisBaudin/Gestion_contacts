@@ -44,6 +44,7 @@ public class ObjectManager<T> {
 
     }
 
+
     public void addObject(T t) {
         objectsList.add(t);
         objectAdapter.notifyDataSetChanged();
@@ -52,6 +53,12 @@ public class ObjectManager<T> {
 
     public void removeObject(int position) {
         objectsList.remove(position);
+        objectAdapter.notifyDataSetChanged();
+        saveObjects();
+    }
+
+    public void removeObject(Object t) {
+        objectsList.remove(t);
         objectAdapter.notifyDataSetChanged();
         saveObjects();
     }
@@ -70,5 +77,11 @@ public class ObjectManager<T> {
 
     public ArrayAdapter<T> getObjectAdapter() {
         return objectAdapter;
+    }
+
+    public void clear() {
+        objectsList.clear();
+        objectAdapter.notifyDataSetChanged();
+        saveObjects();
     }
 }

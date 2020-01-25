@@ -20,4 +20,15 @@
     <string name="contact_sms_test">Envoyer un SMS test</string>
     <string name="del_group">Supprimer le groupe</string>
 
+    <!-- Group Creation -->
+    <string name="name_group">Nom du groupe</string>
+    <string name="create_group">CREER</string>
+
+    <!-- Display Group -->
+    <string name="manage_contacts">Ajouter des contacts</string>
+
+    <!-- Manage Group -->
+    <string name="save">Enregistrer</string>
+
+
 </resources>

@@ -33,8 +33,8 @@ public  class ObjectAdapter<T extends Printable> extends ArrayAdapter<T> {
             convertView = LayoutInflater.from(getContext()).inflate(this.layoutResource, null);
         }
 
-        TextView name = convertView.findViewById(R.id.name);
-        name.setText(t.getText());
+        TextView text = convertView.findViewById(R.id.text);
+        text.setText(t.getText());
 
         return convertView;
     }
