@@ -41,7 +41,7 @@ public class ManageContactInGroupAdapter extends ArrayAdapter<Integer> {
             @Override
             public void onClick(View v) {
                 if (!checkbox.isChecked())
-                    MainActivity.cgm.get(group.getName()).removeObject(position);
+                    MainActivity.cgm.get(group.getName()).removeObject(Integer.valueOf(position));
                 else
                     MainActivity.cgm.get(group.getName()).addObject(position);
             }
