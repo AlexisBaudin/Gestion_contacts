@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import static com.stl.gestion_contacts.MainActivity.contactComp;
+
 public class FormulaireActivity extends AppCompatActivity {
 
     private EditText editNom;
@@ -132,6 +134,8 @@ public class FormulaireActivity extends AppCompatActivity {
         if (formulaireValide) {
             Contact newContact = new Contact(nom, prenom, numTel, mail);
             MainActivity.cm.addObject(newContact);
+            if (MainActivity.contactComp == ContactComparator.Alphabetic)
+                MainActivity.sortContacts();
             finish();
         }
         else {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class ObjectManager<T> {
 
     private ArrayList<T> objectsList;
-    private ArrayAdapter<T> objectAdapter;
+    private ObjectAdapter<T> objectAdapter;
 
     private Context context;
     private InternalStorage internalStorage;
@@ -81,7 +81,7 @@ public class ObjectManager<T> {
         return objectsList;
     }
 
-    public ArrayAdapter<T> getObjectAdapter() {
+    public ObjectAdapter<T> getObjectAdapter() {
         return objectAdapter;
     }
 

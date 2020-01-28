@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gestionnaire de Contacts</string>
+    <string name="app_name">Gestion de Contacts</string>
     <string name="tab_text_1">Contacts</string>
     <string name="tab_text_2">Groupes</string>
 

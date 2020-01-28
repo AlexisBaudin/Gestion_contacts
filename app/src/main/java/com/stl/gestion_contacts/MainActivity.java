@@ -9,21 +9,32 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,8 +50,49 @@ public class MainActivity extends AppCompatActivity {
      * Garde en mémoire les index du ContactManager*/
     static Map<String,ObjectManager<Integer>> cgm;
 
+    static GroupComparator groupComp;
+    static ContactComparator contactComp;
+
+    public final static String GROUP_COMPARATOR_FILENAME = "groupComparator.txt";
+    public final static String CONTACT_COMPARATOR_FILENAME = "contactComparator.txt";
+
     public static final int SMS_PERMISSIONS_REQUEST = 1;
     public static boolean allow_sms = false;
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+       MenuItem item = menu.findItem(R.id.search);
+       final SearchView searchView = (SearchView)item.getActionView();
+       searchView.setQueryHint("Entrez un nom");
+
+        searchView.onActionViewExpanded();
+        searchView.setIconified(false);
+
+
+
+       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+           @Override
+           public boolean onQueryTextSubmit(String query) {
+              return false;
+           }
+
+           @Override
+           public boolean onQueryTextChange(String newText) {
+               if (currentFragment().equals(ListContactFragment.class)) {
+                    cm.getObjectAdapter().filter(newText.toLowerCase(Locale.getDefault()));
+                }
+                else if (currentFragment().equals(ListGroupFragment.class))
+                    gm.getObjectAdapter().filter(newText.toLowerCase(Locale.getDefault()));
+                return false;
+           }
+       });
+
+       return super.onCreateOptionsMenu(menu);
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +106,31 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.SEND_SMS},
                     SMS_PERMISSIONS_REQUEST);
 
-        }
-        else {
+        } else {
             allow_sms = true;
         }
+
+
+        cm = new ObjectManager<Contact>(this, "contacts.txt", R.layout.item_contact);
+        gm = new ObjectManager<Group>(this, "groups.txt", R.layout.item_group);
+        cgm = new HashMap<>();
+        for (Group g : gm.getObjectsList()) {
+            cgm.put(g.getName(), new ObjectManager<Integer>(this, "group_" + g.getName() + ".txt", R.layout.item_contact));
+
+        }
+        try {
+            groupComp = (GroupComparator) InternalStorage.readObject(GROUP_COMPARATOR_FILENAME, "MainActivity oncreate");
+        } catch (IOException e) {
+            groupComp = GroupComparator.Alphabetic;
+            InternalStorage.writeObject(GROUP_COMPARATOR_FILENAME, groupComp, "MainActivity oncreate");
+        }
+        try {
+            contactComp = (ContactComparator) InternalStorage.readObject(CONTACT_COMPARATOR_FILENAME, "MainActivity oncreate");
+        } catch (IOException e) {
+            contactComp = ContactComparator.Alphabetic;
+            InternalStorage.writeObject(CONTACT_COMPARATOR_FILENAME, contactComp, "MainActivity oncreate");
+        }
+
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -74,36 +147,42 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
-                List<Fragment> fragments = fragmentManager.getFragments();
-                for(Fragment fragment : fragments){
-                    if(fragment != null && fragment.getUserVisibleHint())
-                        if (fragment instanceof ListContactFragment)
-                            open_formulaire_contact(view);
-                        else if (fragment instanceof  ListGroupFragment)
-                            createGroup();
-                }
+                if (currentFragment().equals(ListGroupFragment.class))
+                    createGroup();
+                else if (currentFragment().equals(ListContactFragment.class))
+                    open_formulaire_contact();
             }
         });
 
+        /**
+         * Envoi de message
+         */
         fab_sms.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               openSMS();
-           }
-       });
-
-        cm = new ObjectManager<Contact>(this, "contacts.txt", R.layout.item_contact);
-        gm = new ObjectManager<Group>(this, "groups.txt", R.layout.item_group);
-        cgm = new HashMap<>();
-        for (Group g : gm.getObjectsList()) {
-            cgm.put(g.getName(), new ObjectManager<Integer>(this, "group_"+g.getName()+".txt", R.layout.item_contact));
-
-        }
-        printState();
+            @Override
+            public void onClick(View view) {
+                openSMS();
+            }
+        });
     }
 
-    public void open_formulaire_contact (View view) {
+
+
+    public Class currentFragment() {
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for(Fragment fragment : fragments){
+            if(fragment != null && fragment.getUserVisibleHint())
+                if (fragment instanceof ListContactFragment) {
+                    return ListContactFragment.class;
+                }
+                else if (fragment instanceof  ListGroupFragment)
+                    return ListGroupFragment.class;
+
+        }
+        throw new RuntimeException("Fragment inconnu");
+    }
+
+    public void open_formulaire_contact () {
         Intent intent = new Intent(this, FormulaireActivity.class);
         startActivity(intent);
     }
@@ -146,6 +225,8 @@ public class MainActivity extends AppCompatActivity {
                             Group g = new Group(name);
                             gm.addObject(g);
                             cgm.put(g.getName(), new ObjectManager<Integer>(MainActivity.this, "group_"+name+".txt", R.layout.item_contact));
+                            if (groupComp == GroupComparator.Alphabetic)
+                                sortGroup();
                             dialog.dismiss();
                         }
                     }
@@ -189,29 +270,101 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void printState() {
-        System.out.println("\n==========================");
-        System.out.println("Contacts");
-        System.out.println("==========================");
-        for (Contact c : cm.getObjectsList()) {
-            System.out.println(c.getText());
+
+
+    public static void sortContacts() {
+        ContactComparator comp = contactComp;
+        ArrayList<Contact> list = cm.getObjectsList();
+        ArrayList<Contact> listcpy = new ArrayList<>();
+        int [] correspondance = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            listcpy.add(cm.getObjectsList().get(i));
         }
-        System.out.println("==========================");
-        System.out.println("Groups");
-        System.out.println("==========================");
-        for (Group g : gm.getObjectsList()) {
-            System.out.println(g.getName());
+        switch (comp) {
+            case Alphabetic:
+                list.sort(new AlphabeticComparator());
+                break;
+            case LastMsg:
+                list.sort(new LastMsgComparator());
+                break;
         }
-        System.out.println("==========================");
-        System.out.println("Groups Composition");
-        System.out.println("==========================");
-        for (Group g : gm.getObjectsList()) {
-            System.out.print(g.getName() + " ==>");
-            System.out.println(cgm.get(g.getName()).getObjectsList().size());
-            for (Integer i : cgm.get(g.getName()).getObjectsList()) {
-                System.out.print(i + " | ");
+        for (int i = 0; i < list.size(); i++) {
+            correspondance[i] = list.indexOf(listcpy.get(i));
+        }
+        //Mise à jour des index du ContactGroupeManager
+        for (String groupName : cgm.keySet()) {
+            ArrayList<Integer> pos = cgm.get(groupName).getObjectsList();
+            for (int i = 0; i < pos.size(); i++) {
+                cgm.get(groupName).getObjectsList().set(i, correspondance[pos.get(i)]);
             }
-            System.out.println();
+        }
+        cm.getObjectAdapter().notifyDataSetChanged();
+        cm.saveObjects();
+
+    }
+
+    public static void sortGroup(){
+        GroupComparator comp = groupComp;
+        ArrayList<Group> list = gm.getObjectsList();
+        switch (comp) {
+            case Alphabetic:
+                list.sort(new AlphabeticComparator());
+                break;
+            case LastMsg:
+                list.sort(new LastMsgComparator());
+                break;
+            case NumberContacts:
+                list.sort(new NumberContactsComparator());
+                break;
+        }
+        gm.getObjectAdapter().notifyDataSetChanged();
+        gm.saveObjects();
+    }
+
+    static class LastMsgComparator implements Comparator<Contactable> {
+        @Override
+        public int compare(Contactable o1, Contactable o2) {
+            return o2.getLastMsgDate().compareTo(o1.getLastMsgDate());
         }
     }
+
+    static class AlphabeticComparator implements Comparator<Printable> {
+        @Override
+        public int compare(Printable o1, Printable o2) {
+            return o1.getText().compareTo(o2.getText());
+        }
+    }
+
+
+    static class NumberContactsComparator implements Comparator<Group> {
+        @Override
+        public int compare(Group o1, Group o2) {
+            int n1 = MainActivity.cgm.get(o1.getName()).getObjectsList().size();
+            int n2 = MainActivity.cgm.get(o2.getName()).getObjectsList().size();
+            if (n1 < n2)
+                return 1;
+            else if (n1 > n2)
+                return -1;
+            else
+                return 0;
+        }
+    }
+
+    public void setGroupComp(GroupComparator comp) {
+        if (comp == groupComp)
+            return;
+        groupComp = comp;
+        InternalStorage.writeObject(GROUP_COMPARATOR_FILENAME, comp, "MainActivity oncreate");
+        sortGroup();
+    }
+
+    public void setContactComp(ContactComparator comp) {
+        if (comp == contactComp)
+            return;
+        contactComp = comp;
+        InternalStorage.writeObject(CONTACT_COMPARATOR_FILENAME, comp, "MainActivity oncreate");
+        sortContacts();
+    }
+
+
 }
