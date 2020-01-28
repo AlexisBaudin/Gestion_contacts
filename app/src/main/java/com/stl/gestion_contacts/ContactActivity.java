@@ -1,8 +1,11 @@
 package com.stl.gestion_contacts;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,6 +25,8 @@ public class ContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         index = getIntent().getIntExtra("CONTACT_POSITION", -1);
         Contact contact = MainActivity.cm.getObjectsList().get(index);
         sms_sender = new SMS_Sender(this);
@@ -63,4 +68,10 @@ public class ContactActivity extends AppCompatActivity {
     public void sendSMStest (View view) {
         sms_sender.send_SMS(MainActivity.cm.getObjectsList().get(index), textToSend);
     }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        onBackPressed();
+        return true;
+    }
+
 }

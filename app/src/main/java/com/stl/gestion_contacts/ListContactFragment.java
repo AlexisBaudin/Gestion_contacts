@@ -25,8 +25,6 @@ public class ListContactFragment extends MainFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-
         View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
 
         contactListView = view.findViewById(R.id.contactListView);

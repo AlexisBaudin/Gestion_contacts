@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab_sms = findViewById(R.id.fab_sms);
 
 
         /**
@@ -85,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        fab_sms.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               openSMS();
+           }
+       });
+
         cm = new ObjectManager<Contact>(this, "contacts.txt", R.layout.item_contact);
         gm = new ObjectManager<Group>(this, "groups.txt", R.layout.item_group);
         cgm = new HashMap<>();
@@ -97,6 +105,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void open_formulaire_contact (View view) {
         Intent intent = new Intent(this, FormulaireActivity.class);
+        startActivity(intent);
+    }
+
+    private void openSMS () {
+        Intent intent = new Intent(this, SmsActivity.class);
         startActivity(intent);
     }
 

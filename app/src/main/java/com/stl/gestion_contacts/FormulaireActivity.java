@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -25,6 +26,7 @@ public class FormulaireActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulaire);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editNom = findViewById(R.id.nom);
         editPrenom = findViewById(R.id.prenom);
@@ -177,5 +179,10 @@ public class FormulaireActivity extends AppCompatActivity {
             }
         }
         return "";
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        onBackPressed();
+        return true;
     }
 }
