@@ -1,20 +1,19 @@
 package com.stl.gestion_contacts;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -70,6 +69,53 @@ public  class ObjectAdapter<T> extends ArrayAdapter<T> {
             TextView text = convertView.findViewById(R.id.text);
             text.setText((MainActivity.cm.getObjectsList().get((Integer) (t))).getText());
         }
+        if (t instanceof Message) {
+            TextView sms_destinataires = convertView.findViewById(R.id.sms_destinataires);
+            TextView sms_date = convertView.findViewById(R.id.sms_date);
+            TextView sms_content = convertView.findViewById(R.id.sms_content);
+
+            Message message = MainActivity.mm.getObjectsList().get(position);
+
+            ArrayList<Contactable> messageDestinataires = message.getDestinataires();
+            Integer nbDestinataires = messageDestinataires.size();
+            Contactable firstDestinataire = messageDestinataires.get(0);
+            if (firstDestinataire instanceof Group) {
+                String display = "Groupe : ";
+                display += ((Group) firstDestinataire).getName();
+                if (nbDestinataires > 1) {
+                    display += ", et ";
+                    display += nbDestinataires-1;
+                    display += " autres";
+                }
+                sms_destinataires.setText(display);
+            }
+            else if (firstDestinataire instanceof Contact) {
+                String display = "";
+                display += ((Contact) firstDestinataire).getName();
+                if (nbDestinataires > 1) {
+                    display += ", et ";
+                    display += nbDestinataires-1;
+                    display += " autres";
+                }
+                sms_destinataires.setText(display);
+            }
+
+
+            Date messageDate = message.getDate();
+            SimpleDateFormat formatterDay = new SimpleDateFormat("dd/MM/yy");
+            if (formatterDay.format(new Date()).equals(formatterDay.format(messageDate))) {
+                SimpleDateFormat formatterHour = new SimpleDateFormat("HH:mm");
+                sms_date.setText(formatterHour.format(messageDate));
+            }
+            else {
+                sms_date.setText(formatterDay.format(messageDate));
+            }
+
+            String sms = message.getMessage();
+            sms = sms.replace('\n', ' ');
+            sms_content.setText(sms);
+        }
+
 
         return convertView;
     }

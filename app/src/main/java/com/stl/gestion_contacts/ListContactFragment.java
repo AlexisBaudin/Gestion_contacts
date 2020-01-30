@@ -1,24 +1,17 @@
 package com.stl.gestion_contacts;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import java.util.Comparator;
 
 
 public class ListContactFragment extends MainFragment {
@@ -41,7 +34,7 @@ public class ListContactFragment extends MainFragment {
         contactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                open_contact(MainActivity.cm.getObjectAdapter().getItem(index), index);
+                open_contact(index);
             }
         });
         spinner = view.findViewById(R.id.spinner);
@@ -70,9 +63,8 @@ public class ListContactFragment extends MainFragment {
     }
 
 
-    public void open_contact (Contact contact, int index) {
+    public void open_contact (int index) {
         Intent intent = new Intent(context, ContactActivity.class);
-        intent.putExtra("EXTRA_CONTACT", contact);
         intent.putExtra("CONTACT_POSITION", index);
         startActivity(intent);
     }

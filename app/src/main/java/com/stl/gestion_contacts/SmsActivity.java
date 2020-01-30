@@ -1,12 +1,10 @@
 package com.stl.gestion_contacts;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,34 +15,34 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class SmsActivity extends AppCompatActivity {
 
-    SMS_Sender smsSender;
+    private int intentContactPosition;
 
-    EditText smsEditText;
+    private SMS_Sender smsSender;
 
-    SearchView searchContact;
-    ListView searchContactListView;
-    ObjectAdapter<Contact> searchContactAdapter;
+    private EditText smsEditText;
 
-    LinearLayout destContactLayout;
-    ArrayList<Contact> destinatairesContact;
-    ListView destinatairesContactListView;
-    ObjectAdapter<Contact> destinatairesContactAdapter;
+    private SearchView searchContact;
+    private ListView searchContactListView;
+    private ObjectAdapter<Contact> searchContactAdapter;
 
-    SearchView searchGroup;
-    ListView searchGroupListView;
-    ObjectAdapter<Group> searchGroupAdapter;
+    private LinearLayout destContactLayout;
+    private ArrayList<Contact> destinatairesContact;
+    private ListView destinatairesContactListView;
+    private ObjectAdapter<Contact> destinatairesContactAdapter;
 
-    LinearLayout destGroupLayout;
-    ArrayList<Group> destinatairesGroup;
-    ListView destinatairesGroupListView;
-    ObjectAdapter<Group> destinatairesGroupAdapter;
+    private SearchView searchGroup;
+    private ListView searchGroupListView;
+    private ObjectAdapter<Group> searchGroupAdapter;
+
+    private LinearLayout destGroupLayout;
+    private ArrayList<Group> destinatairesGroup;
+    private ListView destinatairesGroupListView;
+    private ObjectAdapter<Group> destinatairesGroupAdapter;
 
 
     private final static double limitHeightDestinataire = 0;
@@ -71,6 +69,13 @@ public class SmsActivity extends AppCompatActivity {
          */
         destContactLayout = findViewById(R.id.layout_dest_contact);
         destinatairesContact = new ArrayList<Contact>();
+
+        intentContactPosition = getIntent().getIntExtra("INTENT_CONTACT_POSITION", -1);
+        if (intentContactPosition >= 0) {
+            destinatairesContact.add(MainActivity.cm.getObjectsList().get(intentContactPosition));
+            destContactLayout.setVisibility(View.VISIBLE);
+        }
+
         destinatairesContactAdapter = new ObjectAdapter<Contact>(
                 SmsActivity.this,
                 R.layout.item_destinataire_sms,
@@ -285,25 +290,13 @@ public class SmsActivity extends AppCompatActivity {
         }
         else {
             String sms = smsEditText.getText().toString();
-            ArrayList<Contact> finalContactList = new ArrayList();
-            for (Contact c : destinatairesContact) {
-                finalContactList.add(c);
-            }
-            for (Group g : destinatairesGroup) {
-                ArrayList<Integer> groupContacts = MainActivity.cgm.get(g.getName()).getObjectsList();
-                for (Integer i : groupContacts) {
-                    Contact contact = MainActivity.cm.getObjectsList().get(i);
-                    if (!finalContactList.contains(contact)) {
-                        finalContactList.add(contact);
-                    }
-                }
-            }
-            for (Contact c : finalContactList) {
-                smsSender.send_SMS(c,sms);
-            }
+            smsSender.send_SMS(sms, destinatairesContact, destinatairesGroup);
+
             refreshSearchView(searchContact, searchContactAdapter);
             refreshSearchView(searchGroup, searchGroupAdapter);
             finish();
         }
     }
+
+
 }

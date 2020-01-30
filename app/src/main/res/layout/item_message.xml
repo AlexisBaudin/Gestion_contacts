@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/message_margin">
+
+        <TextView
+            android:id="@+id/sms_destinataires"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/message_destinataire"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_weight="1"/>
+
+        <!-- espace pour pas que les textview se chevauchent-->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.0001"
+            />
+
+        <TextView
+            android:id="@+id/sms_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:textSize="@dimen/message_date"
+            android:textColor="@color/disabled_color"
+            android:layout_marginLeft="@dimen/message_margin"/>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sms_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/message_content"
+        android:layout_marginBottom="@dimen/message_margin"
+        />
+
+
+
+</LinearLayout>

@@ -1,7 +1,6 @@
 package com.stl.gestion_contacts;
 
 import android.content.Context;
-import android.widget.ArrayAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class ObjectManager<T> {
 
 
     public void addObject(T t) {
-        objectsList.add(t);
+        objectsList.add(0,t);
         objectAdapter.notifyDataSetChanged();
         saveObjects();
     }

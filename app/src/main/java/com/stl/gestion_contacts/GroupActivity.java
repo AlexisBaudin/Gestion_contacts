@@ -49,12 +49,6 @@ public class GroupActivity extends AppCompatActivity {
         finish();
     }
 
-    public void sendSMStest (View view) {
-        for (Integer i : MainActivity.cgm.get(group.getName()).getObjectsList()) {
-            sms_sender.send_SMS(MainActivity.cm.getObjectsList().get(i), "Message test application !");
-        }
-    }
-
     public void manageContacts(View view) {
         Intent intent = new Intent(this, ManageContactInGroupActivity.class);
         intent.putExtra("EXTRA_GROUP", group);

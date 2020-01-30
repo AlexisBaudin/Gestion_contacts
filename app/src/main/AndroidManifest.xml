@@ -12,9 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".MessageActivity"
+            android:label="@string/page_message"></activity>
+        <activity
             android:name=".SmsActivity"
             android:label="@string/page_sms" />
-        <activity android:name=".ContactActivity" />
+        <activity android:name=".ContactActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".FormulaireActivity"
             android:label="@string/page_formulaire" />

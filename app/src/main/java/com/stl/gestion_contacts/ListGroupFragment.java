@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 public class ListGroupFragment extends MainFragment {
 

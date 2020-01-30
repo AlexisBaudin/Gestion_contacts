@@ -5,12 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-
-import static com.stl.gestion_contacts.MainActivity.contactComp;
 
 public class FormulaireActivity extends AppCompatActivity {
 
@@ -27,6 +26,8 @@ public class FormulaireActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editNom = findViewById(R.id.nom);
+        editNom.setFilters(new InputFilter[] {new InputFilter.LengthFilter(MainActivity.MAX_NAME_CONTACT_LENGTH)});
+
         editNumTel = findViewById(R.id.num_tel);
 
         editNom.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);

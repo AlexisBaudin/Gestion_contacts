@@ -4,6 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.telephony.SmsManager;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class SMS_Sender {
 
@@ -13,15 +17,55 @@ public class SMS_Sender {
         this.context = context;
     }
 
-    public void send_SMS(Contact contact, String message) {
+    public void send_SMS(String sms, ArrayList<Contact> contactDestinataires, ArrayList<Group> groupDestinataires) {
 
         if (MainActivity.allow_sms) {
-            SmsManager.getDefault().sendTextMessage(
-                    contact.num_tel,
-                    null,
-                    message,
-                    null,
-                    null);
+
+            /** Liste sans doublon des contacts à qui envoyer le SMS */
+            ArrayList<Contact> finalDestinataires = new ArrayList<Contact>();
+            for (Contact c : contactDestinataires) {
+                if (!finalDestinataires.contains(c)) {
+                    finalDestinataires.add(c);
+                }
+            }
+            for (Group g : groupDestinataires) {
+                ArrayList<Integer> groupContacts = MainActivity.cgm.get(g.getName()).getObjectsList();
+                for (Integer i : groupContacts) {
+                    Contact contact = MainActivity.cm.getObjectsList().get(i);
+                    if (!finalDestinataires.contains(contact)) {
+                        finalDestinataires.add(contact);
+                    }
+                }
+            }
+
+            try {
+                /** Découper le message */
+                SmsManager smsManager = SmsManager.getDefault();
+                ArrayList<String> parts = smsManager.divideMessage(sms);
+
+
+                for (Contact c : finalDestinataires) {
+                    smsManager.sendMultipartTextMessage(c.getNumTel(), null, parts, null, null);
+                }
+
+
+
+                /*SmsManager.getDefault().sendTextMessage(
+                        contact.num_tel,
+                        null,
+                        message,
+                        null,
+                        null);*/
+                Toast.makeText(context, "SMS envoyé ! :)",
+                        Toast.LENGTH_LONG).show();
+
+                /** Sauvegarder le message */
+                save_sms(sms, contactDestinataires, groupDestinataires);
+            }
+            catch (Exception e) {
+                Toast.makeText(context, "Problème avec l'envoi du SMS...\nSVP contactez les développeurs.",
+                        Toast.LENGTH_LONG).show();
+            }
 
         }
         else {
@@ -39,6 +83,9 @@ public class SMS_Sender {
         }
     }
 
-
+    private static void save_sms (String sms, ArrayList<Contact> contactList, ArrayList<Group> groupList) {
+        Message message = new Message(sms, new Date(), contactList, groupList);
+        MainActivity.mm.addObject(message);
+    }
 
 }

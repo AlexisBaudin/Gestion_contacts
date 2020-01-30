@@ -9,4 +9,14 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_inter">85dp</dimen>
     <dimen name="fab_ic_sms">60dp</dimen>
+    <dimen name="fab_ic_trash">40dp</dimen>
+
+    <dimen name="message_margin">12dp</dimen>
+    <dimen name="message_destinataire">16dp</dimen>
+    <dimen name="message_content">14dp</dimen>
+    <dimen name="message_date">14dp</dimen>
+    <dimen name="textsize_display_sms">18dp</dimen>
+
+    <dimen name="app_bar_height">200dp</dimen>
+    <dimen name="textsize_contactTel">30dp</dimen>
 </resources>

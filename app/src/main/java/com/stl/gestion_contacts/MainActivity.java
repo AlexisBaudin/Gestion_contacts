@@ -9,10 +9,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +21,6 @@ import android.view.View;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
@@ -42,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     /* ******************************************************
      * Managers pour les données stockées et listées
      * *****************************************************/
+    /** Manager des messages */
+    static ObjectManager<Message> mm;
     /** Manager des contacts */
     static ObjectManager<Contact> cm;
     /** Manager des groupes */
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int SMS_PERMISSIONS_REQUEST = 1;
     public static boolean allow_sms = false;
+    public static final int MAX_NAME_GROUP_LENGTH = 25;
+    public static final int MAX_NAME_CONTACT_LENGTH = 25;
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -69,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
         searchView.onActionViewExpanded();
         searchView.setIconified(false);
-
-
 
        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
            @Override
@@ -92,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
        return super.onCreateOptionsMenu(menu);
     }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             allow_sms = true;
         }
 
-
+        mm = new ObjectManager<Message>(this, "messages.txt", R.layout.item_message);
         cm = new ObjectManager<Contact>(this, "contacts.txt", R.layout.item_contact);
         gm = new ObjectManager<Group>(this, "groups.txt", R.layout.item_group);
         cgm = new HashMap<>();
@@ -131,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
             InternalStorage.writeObject(CONTACT_COMPARATOR_FILENAME, contactComp, "MainActivity oncreate");
         }
 
-
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
@@ -139,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.fab);
         FloatingActionButton fab_sms = findViewById(R.id.fab_sms);
-
 
         /**
          * Création d'un nouveau groupe ou contact
@@ -160,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         fab_sms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openSMS();
+                openSMS(MainActivity.this, -1);
             }
         });
     }
@@ -175,8 +172,12 @@ public class MainActivity extends AppCompatActivity {
                 if (fragment instanceof ListContactFragment) {
                     return ListContactFragment.class;
                 }
-                else if (fragment instanceof  ListGroupFragment)
+                else if (fragment instanceof ListGroupFragment) {
                     return ListGroupFragment.class;
+                }
+                else if (fragment instanceof  ListMessageFragment) {
+                    return ListMessageFragment.class;
+                }
 
         }
         throw new RuntimeException("Fragment inconnu");
@@ -187,15 +188,19 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void openSMS () {
-        Intent intent = new Intent(this, SmsActivity.class);
-        startActivity(intent);
+    public static void openSMS (Context context, int position) {
+        Intent intent = new Intent(context, SmsActivity.class);
+        if (position >= 0) {
+            intent.putExtra("INTENT_CONTACT_POSITION", position);
+        }
+        context.startActivity(intent);
     }
 
     private void createGroup() {
         final EditText taskEditText = new EditText(this);
         taskEditText.setHint(R.string.name_group);
         taskEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        taskEditText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(MAX_NAME_GROUP_LENGTH)});
 
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Nouveau Groupe")
