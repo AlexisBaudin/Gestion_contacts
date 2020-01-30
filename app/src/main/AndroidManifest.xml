@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SmsActivity"
-            android:label="@string/page_sms"></activity>
+            android:label="@string/page_sms" />
         <activity android:name=".ContactActivity" />
         <activity
             android:name=".FormulaireActivity"

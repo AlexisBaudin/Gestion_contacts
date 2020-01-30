@@ -34,10 +34,8 @@ public class ContactActivity extends AppCompatActivity {
         setTitle(contact.getText());
 
         TextView num_tel = findViewById(R.id.contact_num);
-        TextView mail = findViewById(R.id.contact_mail);
 
         num_tel.setText(contact.num_tel);
-        mail.setText(contact.mail);
     }
 
     public void delContact (View view) {

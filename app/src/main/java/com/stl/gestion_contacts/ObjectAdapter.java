@@ -73,4 +73,5 @@ public  class ObjectAdapter<T> extends ArrayAdapter<T> {
 
         return convertView;
     }
+
 }

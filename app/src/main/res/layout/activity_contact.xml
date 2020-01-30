@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+    android:layout_marginVertical="@dimen/activity_vertical_margin"
     tools:context=".ContactActivity">
 
     <TextView
@@ -14,16 +16,6 @@
 
     <TextView
         android:id="@+id/contact_num"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/contact_mail"/>
-
-    <TextView
-        android:id="@+id/contact_mail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

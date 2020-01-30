@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
@@ -67,6 +68,7 @@ public class ListContactFragment extends MainFragment {
 
         return view;
     }
+
 
     public void open_contact (Contact contact, int index) {
         Intent intent = new Intent(context, ContactActivity.class);

@@ -2,6 +2,7 @@ package com.stl.gestion_contacts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +19,7 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_group);
         group = (Group) getIntent().getSerializableExtra("EXTRA_GROUP");
@@ -64,6 +66,11 @@ public class GroupActivity extends AppCompatActivity {
         intent.putExtra("EXTRA_CONTACT", contact);
         intent.putExtra("CONTACT_POSITION", index);
         startActivity(intent);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        onBackPressed();
+        return true;
     }
 
 }

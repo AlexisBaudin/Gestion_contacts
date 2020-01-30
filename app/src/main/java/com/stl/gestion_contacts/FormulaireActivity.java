@@ -15,14 +15,10 @@ import static com.stl.gestion_contacts.MainActivity.contactComp;
 public class FormulaireActivity extends AppCompatActivity {
 
     private EditText editNom;
-    private EditText editPrenom;
     private EditText editNumTel;
-    private EditText editMail;
 
     private String numTel = "";
-    private String mail = "";
     private String nom = "";
-    private String prenom = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +27,10 @@ public class FormulaireActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editNom = findViewById(R.id.nom);
-        editPrenom = findViewById(R.id.prenom);
         editNumTel = findViewById(R.id.num_tel);
-        editMail = findViewById(R.id.mail);
 
         editNom.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        editPrenom.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         editNumTel.setInputType(InputType.TYPE_CLASS_PHONE);
-        editMail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
         editNumTel.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -49,27 +41,12 @@ public class FormulaireActivity extends AppCompatActivity {
                     if (numTel.length() > 0) {
                         String formatedNumTel = formatNumTel(numTel);
                         if (formatedNumTel.equals("")) {
-                            editNumTel.setError("Le numéro doit être \n" +
-                                    "- un numéro de téléphone portable\n" +
-                                    "- un numéro français");
+                            editNumTel.setError("Le numéro doit être un numéro de téléphone portable français.");
                         }
                         else {
                             editNumTel.setText(formatedNumTel);
                             numTel = formatedNumTel;
                         }
-                    }
-                }
-            }
-        });
-
-        editMail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-                    mail = editMail.getText().toString().trim();
-                    if (mail.length() > 0 && (!isValidMail(mail))) {
-                            editMail.setError("Adresse mail invalide.");
-
                     }
                 }
             }
@@ -82,7 +59,6 @@ public class FormulaireActivity extends AppCompatActivity {
                     nom = editNom.getText().toString().trim();
                     if (! nom.equals("")) {
                         editNom.setError(null);
-                        editPrenom.setError(null);
                         nom = nom.substring(0,1).toUpperCase() + nom.substring(1);
                         editNom.setText(nom);
                     }
@@ -90,49 +66,33 @@ public class FormulaireActivity extends AppCompatActivity {
             }
         });
 
-        editPrenom.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-                    prenom = editPrenom.getText().toString().trim();
-                    if (! prenom.equals("")) {
-                        editNom.setError(null);
-                        editPrenom.setError(null);
-                        prenom = prenom.substring(0,1).toUpperCase() + prenom.substring(1);
-                        editPrenom.setText(prenom);
-                    }
-                }
-            }
-        });
-
-
     }
 
     public void valid_contact (View view) {
 
         String nom = editNom.getText().toString().trim();
-        String prenom = editPrenom.getText().toString().trim();
+        numTel = editNumTel.getText().toString().trim();
 
         boolean formulaireValide = true;
 
-        if (nom.equals("") && prenom.equals("")) {
+        if (nom.equals("")) {
             formulaireValide = false;
-            editNom.setError("Entrez au moins un nom ou un prénom.");
-            editPrenom.setError("Entrez au moins un nom ou un prénom.");
+            editNom.setError("Veuillez indiquer le nom du contact.");
         }
         if (numTel.equals("")) {
             formulaireValide = false;
-            editNumTel.setError("Entrez le numéro de téléphone du contact.");
+            editNumTel.setError("Veuillez entre le numéro de téléphone du contact");
         }
-        else if (formatNumTel(numTel).equals("")) {
-            formulaireValide = false;
-        }
-        if (! (mail.equals("") || isValidMail(mail))) {
-            formulaireValide = false;
+        else {
+            numTel = formatNumTel(numTel);
+            if (numTel.equals("")) {
+                formulaireValide = false;
+                editNumTel.setError("Le numéro doit être un numéro de téléphone portable français.");
+            }
         }
 
         if (formulaireValide) {
-            Contact newContact = new Contact(nom, prenom, numTel, mail);
+            Contact newContact = new Contact(nom, numTel);
             MainActivity.cm.addObject(newContact);
             if (MainActivity.contactComp == ContactComparator.Alphabetic)
                 MainActivity.sortContacts();

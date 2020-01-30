@@ -10,6 +10,7 @@
     <string name="prenom">Prénom</string>
     <string name="num_tel">Numéro de téléphone</string>
     <string name="mail">Adresse mail</string>
+    <string name="error_numtel">Le numéro doit être un numéro de téléphone portable français.</string>
 
 
     <!-- Display contact -->
@@ -29,16 +30,17 @@
 
     <!-- Manage Group -->
     <string name="save">Enregistrer</string>
-    <string name="title_activity_sms">SMSActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
 
     <!-- SMS -->
     <string name="page_sms">Envoi d\'un SMS</string>
+    <string name="gpe_envoi">Groupe(s) à envoyer :</string>
+    <string name="contact_envoi">Contact(s) à envoyer :</string>
     <string name="btn_send">Envoyer</string>
     <string name="text_message">Message</string>
+    <string name="add_contact">Ajouter un contact</string>
+    <string name="add_group">Ajouter un groupe</string>
+    <string name="to_contact">Envoi contact(s) :</string>
+    <string name="to_group">Envoi groupe(s) :</string>
+    <string name="message">Message :</string>
+    <string name="title_activity_basic">BasicActivity</string>
 </resources>
