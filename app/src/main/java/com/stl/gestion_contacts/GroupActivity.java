@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +26,6 @@ public class GroupActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_group);
         group = (Group) getIntent().getSerializableExtra("EXTRA_GROUP");
-        index = getIntent().getIntExtra("GROUP_POSITION", -1);
         sms_sender = new SMS_Sender(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -45,6 +45,13 @@ public class GroupActivity extends AppCompatActivity {
                 open_contact(MainActivity.cm.getObjectsList().get(adapter.getItem(index)), adapter.getItem(index));
             }
         });
+        if (adapter.getCount() > 0) {
+            View item = adapter.getView(0, null, listView);
+            item.measure(0, 0);
+            int nb_elements_displayed = adapter.getCount() * item.getMeasuredHeight();
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, nb_elements_displayed);
+            listView.setLayoutParams(params);
+        }
 
         FloatingActionButton fab_sms = findViewById(R.id.fab_sms);
         fab_sms.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +91,7 @@ public class GroupActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ManageContactInGroupActivity.class);
         intent.putExtra("EXTRA_GROUP", group);
         startActivity(intent);
+        finish();
     }
 
     public void open_contact (Contact contact, int index) {

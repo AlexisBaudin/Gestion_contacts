@@ -72,7 +72,6 @@ public class ListGroupFragment extends MainFragment {
     public void open_group (Group group, int index) {
         Intent intent = new Intent(context, GroupActivity.class);
         intent.putExtra("EXTRA_GROUP", group);
-        intent.putExtra("GROUP_POSITION", index);
         startActivity(intent);
     }
 

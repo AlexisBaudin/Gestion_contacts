@@ -1,5 +1,6 @@
 package com.stl.gestion_contacts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,9 @@ public class ManageContactInGroupActivity extends AppCompatActivity {
     }
 
     public void save(View view) {
+        Intent intent = new Intent(this, GroupActivity.class);
+        intent.putExtra("EXTRA_GROUP", group);
+        startActivity(intent);
         finish();
     }
 
