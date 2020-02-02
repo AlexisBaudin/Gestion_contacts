@@ -162,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        /** Initialization of View pager */
+        fab.hide();
         viewPager.setCurrentItem(0);
 
         /**
