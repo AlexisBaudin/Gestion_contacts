@@ -5,8 +5,8 @@
     <string name="tab_text_2">Groupes</string>
 
     <!-- Formulaire -->
-    <string name="page_formulaire">Ajouter un contact</string>
-    <string name="btn_valid_contact">Ajouter le contact</string>
+    <string name="page_formulaire">Contact</string>
+    <string name="btn_valid_contact">Valider</string>
     <string name="nom">Nom</string>
     <string name="prenom">Prénom</string>
     <string name="num_tel">Numéro de téléphone</string>

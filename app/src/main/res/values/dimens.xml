@@ -9,7 +9,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_inter">85dp</dimen>
     <dimen name="fab_ic_sms">60dp</dimen>
-    <dimen name="fab_ic_trash">40dp</dimen>
+    <dimen name="fab_ic_trash">30dp</dimen>
 
     <dimen name="message_margin">12dp</dimen>
     <dimen name="message_destinataire">16dp</dimen>

@@ -2,6 +2,8 @@ package com.stl.gestion_contacts;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +18,6 @@ public class ContactActivity extends AppCompatActivity {
      * Index dans Le main ContactManager
      */
     private int index;
-    private SMS_Sender sms_sender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,6 @@ public class ContactActivity extends AppCompatActivity {
 
         index = getIntent().getIntExtra("CONTACT_POSITION", -1);
         Contact contact = MainActivity.cm.getObjectsList().get(index);
-        sms_sender = new SMS_Sender(this);
 
         setTitle(contact.getText());
 
@@ -50,6 +50,14 @@ public class ContactActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 delContact(view);
+            }
+        });
+
+        FloatingActionButton fab_modifier = findViewById(R.id.fab_modifier);
+        fab_modifier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                modifierContact(view);
             }
         });
     }
@@ -76,6 +84,13 @@ public class ContactActivity extends AppCompatActivity {
             }
         }
         MainActivity.cm.removeObject(index);
+        finish();
+    }
+
+    public void modifierContact (View view) {
+        Intent intent = new Intent(this, FormulaireActivity.class);
+        intent.putExtra("CONTACT_POSITION", index);
+        startActivity(intent);
         finish();
     }
 

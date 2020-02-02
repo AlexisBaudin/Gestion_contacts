@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -19,6 +20,9 @@ public class FormulaireActivity extends AppCompatActivity {
     private String numTel = "";
     private String nom = "";
 
+    int indexContact;
+    Contact contact;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,13 @@ public class FormulaireActivity extends AppCompatActivity {
 
         editNom.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         editNumTel.setInputType(InputType.TYPE_CLASS_PHONE);
+
+        indexContact = getIntent().getIntExtra("CONTACT_POSITION", -1);
+        if (indexContact != -1) {
+            contact = MainActivity.cm.getObjectsList().get(indexContact);
+            editNom.setText(contact.getName());
+            editNumTel.setText(contact.getNumTel());
+        }
 
         editNumTel.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -93,10 +104,19 @@ public class FormulaireActivity extends AppCompatActivity {
         }
 
         if (formulaireValide) {
+            if (indexContact != -1) {
+                MainActivity.cm.removeObject(indexContact);
+            }
             Contact newContact = new Contact(nom, numTel);
             MainActivity.cm.addObject(newContact);
             if (MainActivity.contactComp == ContactComparator.Alphabetic)
                 MainActivity.sortContacts();
+            if (indexContact != -1) {
+                Intent intent = new Intent(this, ContactActivity.class);
+                int indexNewContact = MainActivity.cm.getObjectsList().indexOf(newContact);
+                intent.putExtra("CONTACT_POSITION", indexNewContact);
+                startActivity(intent);
+            }
             finish();
         }
         else {
