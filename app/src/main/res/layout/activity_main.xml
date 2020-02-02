@@ -25,22 +25,22 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_sms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add_white_30dp" />
-
+        app:srcCompat="@drawable/ic_sms"
+        app:maxImageSize="@dimen/fab_ic_sms" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_sms"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_marginBottom="@dimen/fab_inter"
-        android:src="@drawable/ic_sms"
-        app:maxImageSize="@dimen/fab_ic_sms"
-        app:layout_anchor="@id/fab"
+        android:src="@drawable/ic_add_white_30dp"
+        app:layout_anchor="@id/fab_sms"
         app:layout_anchorGravity="top" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

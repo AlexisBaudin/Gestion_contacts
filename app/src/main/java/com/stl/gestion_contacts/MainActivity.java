@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     static GroupComparator groupComp;
     static ContactComparator contactComp;
 
+    private FloatingActionButton fab;
+    private FloatingActionButton fab_sms;
+
     public final static String GROUP_COMPARATOR_FILENAME = "groupComparator.txt";
     public final static String CONTACT_COMPARATOR_FILENAME = "contactComparator.txt";
 
@@ -135,8 +138,31 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        FloatingActionButton fab_sms = findViewById(R.id.fab_sms);
+        fab = findViewById(R.id.fab);
+        fab_sms = findViewById(R.id.fab_sms);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position==0){
+                    fab.hide();
+                }
+                else {
+                    fab.show();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        viewPager.setCurrentItem(0);
 
         /**
          * Création d'un nouveau groupe ou contact
@@ -157,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         fab_sms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openSMS(MainActivity.this, -1);
+                openSMS(MainActivity.this);
             }
         });
     }
@@ -188,11 +214,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static void openSMS (Context context, int position) {
+    public static void openSMS (Context context) {
         Intent intent = new Intent(context, SmsActivity.class);
-        if (position >= 0) {
-            intent.putExtra("INTENT_CONTACT_POSITION", position);
-        }
         context.startActivity(intent);
     }
 

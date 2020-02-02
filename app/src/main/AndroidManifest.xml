@@ -30,7 +30,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GroupActivity" />
+        <activity
+            android:name=".GroupActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ManageContactInGroupActivity" />
     </application>
 

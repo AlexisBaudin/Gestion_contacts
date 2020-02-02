@@ -41,7 +41,9 @@ public class ContactActivity extends AppCompatActivity {
         fab_sms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.openSMS(ContactActivity.this, index);
+                Intent intent = new Intent(ContactActivity.this, SmsActivity.class);
+                intent.putExtra("INTENT_CONTACT_POSITION", index);
+                ContactActivity.this.startActivity(intent);
             }
         });
 

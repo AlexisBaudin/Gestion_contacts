@@ -29,6 +29,7 @@
     <!-- Display Group -->
     <string name="manage_contacts">Ajouter des contacts</string>
     <string name="modify_name">Modifier le nom du groupe</string>
+    <string name="group_members">Membres :</string>
 
     <!-- Manage Group -->
     <string name="save">Enregistrer</string>

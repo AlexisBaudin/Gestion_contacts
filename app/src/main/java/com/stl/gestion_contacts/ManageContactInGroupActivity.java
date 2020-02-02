@@ -1,6 +1,7 @@
 package com.stl.gestion_contacts;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,7 @@ public class ManageContactInGroupActivity extends AppCompatActivity {
     @Override @SuppressWarnings("ConstantConditions")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         group = (Group)getIntent().getSerializableExtra("EXTRA_GROUP");
 
 
@@ -36,6 +38,11 @@ public class ManageContactInGroupActivity extends AppCompatActivity {
 
     public void save(View view) {
         finish();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        onBackPressed();
+        return true;
     }
 
 }

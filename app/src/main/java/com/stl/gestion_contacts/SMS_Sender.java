@@ -57,14 +57,6 @@ public class SMS_Sender {
                     smsManager.sendMultipartTextMessage(c.getNumTel(), null, parts, null, null);
                 }
 
-
-
-                /*SmsManager.getDefault().sendTextMessage(
-                        contact.num_tel,
-                        null,
-                        message,
-                        null,
-                        null);*/
                 Toast.makeText(context, "SMS envoyé ! :)",
                         Toast.LENGTH_LONG).show();
 

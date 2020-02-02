@@ -11,6 +11,7 @@ import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class FormulaireActivity extends AppCompatActivity {
 
@@ -120,17 +121,11 @@ public class FormulaireActivity extends AppCompatActivity {
             finish();
         }
         else {
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle("Formulaire invalide");
-            alertDialog.setMessage("Il y a des erreurs dans le activity_formulaire. " +
-                    "Veuillez vérifier les informations svp.");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Il y a des erreurs dans le formulaire. " +
+                    "Veuillez vérifier les informations svp.",
+                    Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
