@@ -2,12 +2,18 @@ package com.stl.gestion_contacts;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
@@ -18,24 +24,30 @@ public class ContactActivity extends AppCompatActivity {
      * Index dans Le main ContactManager
      */
     private int index;
+    TextView num_tel;
+    Contact contact;
+    Toolbar toolbar;
+    CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
 
+
+        toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         index = getIntent().getIntExtra("CONTACT_POSITION", -1);
-        Contact contact = MainActivity.cm.getObjectsList().get(index);
+        num_tel = findViewById(R.id.contact_num);
+        collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
 
-        setTitle(contact.getText());
+        contact = MainActivity.cm.getObjectsList().get(index);
 
-        TextView num_tel = findViewById(R.id.contact_num);
         num_tel.setText(contact.getNumTel());
+        collapsingToolbarLayout.setTitle(contact.getText());
 
         FloatingActionButton fab_sms = findViewById(R.id.fab_sms);
         fab_sms.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +74,26 @@ public class ContactActivity extends AppCompatActivity {
                 modifierContact(view);
             }
         });
+
     }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                String newName = data.getStringExtra("name");
+                String newNumTel = data.getStringExtra("numTel");
+                num_tel.setText(newNumTel);
+                collapsingToolbarLayout.setTitle(newName);
+            }
+        }
+    }
+
+    private void displayData () {
+
+    }
+
 
     public void delContact (View view) {
 
@@ -92,8 +123,7 @@ public class ContactActivity extends AppCompatActivity {
     public void modifierContact (View view) {
         Intent intent = new Intent(this, FormulaireActivity.class);
         intent.putExtra("CONTACT_POSITION", index);
-        startActivity(intent);
-        finish();
+        startActivityForResult(intent, 1);
     }
 
     public boolean onOptionsItemSelected(MenuItem item){

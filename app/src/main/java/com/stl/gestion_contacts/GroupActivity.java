@@ -20,6 +20,9 @@ public class GroupActivity extends AppCompatActivity {
     private int index;
     private SMS_Sender sms_sender;
 
+    private ListView listView;
+    private ArrayAdapter<Integer> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,10 +36,10 @@ public class GroupActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(group.getName());
 
-        ListView listView = findViewById(R.id.contactListView);
+        listView = findViewById(R.id.contactListView);
 
 
-        final ArrayAdapter<Integer> adapter = MainActivity.cgm.get(group.getName()).getObjectAdapter();
+        adapter = MainActivity.cgm.get(group.getName()).getObjectAdapter();
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -45,13 +48,7 @@ public class GroupActivity extends AppCompatActivity {
                 open_contact(MainActivity.cm.getObjectsList().get(adapter.getItem(index)), adapter.getItem(index));
             }
         });
-        if (adapter.getCount() > 0) {
-            View item = adapter.getView(0, null, listView);
-            item.measure(0, 0);
-            int nb_elements_displayed = adapter.getCount() * item.getMeasuredHeight();
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, nb_elements_displayed);
-            listView.setLayoutParams(params);
-        }
+        adaptSizeListView();
 
         FloatingActionButton fab_sms = findViewById(R.id.fab_sms);
         fab_sms.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +78,22 @@ public class GroupActivity extends AppCompatActivity {
 
     }
 
+    private void adaptSizeListView () {
+        if (adapter.getCount() > 0) {
+            View item = adapter.getView(0, null, listView);
+            item.measure(0, 0);
+            int nb_elements_displayed = (int) (adapter.getCount()) * item.getMeasuredHeight();
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, nb_elements_displayed);
+            listView.setLayoutParams(params);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adaptSizeListView();
+    }
+
     public void delGroup (View view) {
         MainActivity.gm.removeObject(index);
         MainActivity.cgm.remove(this.group.getName());
@@ -91,7 +104,6 @@ public class GroupActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ManageContactInGroupActivity.class);
         intent.putExtra("EXTRA_GROUP", group);
         startActivity(intent);
-        finish();
     }
 
     public void open_contact (Contact contact, int index) {

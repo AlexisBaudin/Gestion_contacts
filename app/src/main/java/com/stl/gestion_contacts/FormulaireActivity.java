@@ -105,20 +105,38 @@ public class FormulaireActivity extends AppCompatActivity {
         }
 
         if (formulaireValide) {
-            if (indexContact != -1) {
-                MainActivity.cm.removeObject(indexContact);
-            }
             Contact newContact = new Contact(nom, numTel);
-            MainActivity.cm.addObject(newContact);
-            if (MainActivity.contactComp == ContactComparator.Alphabetic)
-                MainActivity.sortContacts();
-            if (indexContact != -1) {
-                Intent intent = new Intent(this, ContactActivity.class);
-                int indexNewContact = MainActivity.cm.getObjectsList().indexOf(newContact);
-                intent.putExtra("CONTACT_POSITION", indexNewContact);
-                startActivity(intent);
+            if (nameAlreadyExists(newContact.getName())&&
+                    !(indexContact != -1 && newContact.getName().equals(contact.getName()))) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Ce nom de contact existe déjà.",
+                        Toast.LENGTH_SHORT);
+                toast.show();
             }
-            finish();
+            else {
+                Contact doublon = numTelAlreadyExists(newContact.getNumTel());
+                if (!doublon.getName().equals("") &&
+                        !(indexContact != -1 && newContact.getNumTel().equals(contact.getNumTel()))) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Ce contact existe déjà sous le nom de " + doublon.getName() + ".",
+                            Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else {
+                    if (indexContact == -1) {
+                        MainActivity.cm.addObject(newContact);
+                    } else {
+                        MainActivity.cm.modifyObject(indexContact, newContact);
+                        Intent intent = new Intent();
+                        intent.putExtra("name", newContact.getName());
+                        intent.putExtra("numTel", newContact.getNumTel());
+                        setResult(RESULT_OK, intent);
+                    }
+                    if (MainActivity.contactComp == ContactComparator.Alphabetic)
+                        MainActivity.sortContacts();
+                    finish();
+                }
+            }
         }
         else {
             Toast toast = Toast.makeText(getApplicationContext(),
@@ -127,6 +145,24 @@ public class FormulaireActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    private Contact numTelAlreadyExists(String numTelTest) {
+        for (Contact c : MainActivity.cm.getObjectsList()) {
+            if (c.getNumTel().equals(numTelTest)) {
+                return c;
+            }
+        }
+        return new Contact("","");
+    }
+
+    private boolean nameAlreadyExists(String nameTest) {
+        for (Contact c : MainActivity.cm.getObjectsList()) {
+            if (c.getName().equals(nameTest)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isValidMail(String email) {
