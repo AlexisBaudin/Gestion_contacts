@@ -64,6 +64,27 @@ public  class ObjectAdapter<T> extends ArrayAdapter<T> {
         if (t instanceof Printable) {
             TextView text = convertView.findViewById(R.id.text);
             text.setText(((Printable)(t)).getText());
+
+            if (t instanceof Contactable) {
+                try {
+                    TextView dateTextView = convertView.findViewById(R.id.date);
+                    Date dateLastMsg = ((Contactable) t).getLastMsgDate();
+
+                    SimpleDateFormat formatterDay = new SimpleDateFormat("dd/MM/yy");
+                    String dateString;
+                    if (formatterDay.format(Contactable.NO_DATE).equals(formatterDay.format(((Contactable) t).getLastMsgDate()))) {
+                        dateString = "Jamais contacté";
+                    }
+                    else if (formatterDay.format(new Date()).equals(formatterDay.format(((Contactable) t).getLastMsgDate()))) {
+                        dateString = "Contacté à " + formatDate(dateLastMsg);
+                    }
+                    else {
+                        dateString = "Contacté le " + formatDate(dateLastMsg);
+                    }
+                    dateTextView.setText(dateString);
+                } catch (NullPointerException e) {
+                }
+            }
         }
         if (t instanceof Integer) {
             TextView text = convertView.findViewById(R.id.text);
@@ -102,14 +123,7 @@ public  class ObjectAdapter<T> extends ArrayAdapter<T> {
 
 
             Date messageDate = message.getDate();
-            SimpleDateFormat formatterDay = new SimpleDateFormat("dd/MM/yy");
-            if (formatterDay.format(new Date()).equals(formatterDay.format(messageDate))) {
-                SimpleDateFormat formatterHour = new SimpleDateFormat("HH:mm");
-                sms_date.setText(formatterHour.format(messageDate));
-            }
-            else {
-                sms_date.setText(formatterDay.format(messageDate));
-            }
+            sms_date.setText(formatDate(messageDate));
 
             String sms = message.getMessage();
             sms = sms.replace('\n', ' ');
@@ -118,6 +132,17 @@ public  class ObjectAdapter<T> extends ArrayAdapter<T> {
 
 
         return convertView;
+    }
+
+    private String formatDate (Date date) {
+        SimpleDateFormat formatterDay = new SimpleDateFormat("dd/MM/yy");
+        if (formatterDay.format(new Date()).equals(formatterDay.format(date))) {
+            SimpleDateFormat formatterHour = new SimpleDateFormat("HH:mm");
+            return formatterHour.format(date);
+        }
+        else {
+            return formatterDay.format(date);
+        }
     }
 
 }

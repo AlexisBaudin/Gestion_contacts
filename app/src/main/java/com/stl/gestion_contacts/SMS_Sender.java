@@ -26,6 +26,9 @@ public class SMS_Sender {
             for (Contact c : contactDestinataires) {
                 if (!finalDestinataires.contains(c)) {
                     finalDestinataires.add(c);
+                    int index = MainActivity.cm.getObjectsList().indexOf(c);
+                    c.setDateLastMsg(new Date());
+                    MainActivity.cm.modifyObject(index, c);
                 }
             }
             for (Group g : groupDestinataires) {
@@ -34,8 +37,14 @@ public class SMS_Sender {
                     Contact contact = MainActivity.cm.getObjectsList().get(i);
                     if (!finalDestinataires.contains(contact)) {
                         finalDestinataires.add(contact);
+                        int index = MainActivity.cm.getObjectsList().indexOf(contact);
+                        contact.setDateLastMsg(new Date());
+                        MainActivity.cm.modifyObject(index, contact);
                     }
                 }
+                int index = MainActivity.gm.getObjectsList().indexOf(g);
+                g.setLastMsgDate(new Date());
+                MainActivity.gm.modifyObject(index, g);
             }
 
             try {

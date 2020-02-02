@@ -6,10 +6,11 @@ import java.util.Date;
 public class Group implements Serializable, Printable, Contactable{
 
     private String name;
-    private Date lastMsg = new Date();
+    private Date lastMsg;
 
     public Group(String name) {
         this.name = name;
+        lastMsg = Contactable.NO_DATE;
     }
 
 
@@ -25,4 +26,6 @@ public class Group implements Serializable, Printable, Contactable{
     public Date getLastMsgDate() {
         return lastMsg;
     }
+
+    public void setLastMsgDate(Date date) { lastMsg = date; }
 }

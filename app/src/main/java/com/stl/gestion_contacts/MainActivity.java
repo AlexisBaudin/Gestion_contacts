@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mm = new ObjectManager<Message>(this, "messages.txt", R.layout.item_message);
-        cm = new ObjectManager<Contact>(this, "contacts.txt", R.layout.item_contact);
-        gm = new ObjectManager<Group>(this, "groups.txt", R.layout.item_group);
+        cm = new ObjectManager<Contact>(this, "contacts.txt", R.layout.item_name_date);
+        gm = new ObjectManager<Group>(this, "groups.txt", R.layout.item_name_date);
         cgm = new HashMap<>();
         for (Group g : gm.getObjectsList()) {
             cgm.put(g.getName(), new ObjectManager<Integer>(this, "group_" + g.getName() + ".txt", R.layout.item_contact));

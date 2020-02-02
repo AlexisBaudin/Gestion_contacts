@@ -67,6 +67,12 @@ public class ObjectManager<T> {
         saveObjects();
     }
 
+    public void modifyObject(int index, T newObject) {
+        objectsList.set(index, newObject);
+        objectAdapter.notifyDataSetChanged();
+        saveObjects();
+    }
+
 
     public void saveObjects () {
         // Save the list of entries to internal storage

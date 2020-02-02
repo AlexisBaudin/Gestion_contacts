@@ -28,6 +28,7 @@
 
     <!-- Display Group -->
     <string name="manage_contacts">Ajouter des contacts</string>
+    <string name="modify_name">Modifier le nom du groupe</string>
 
     <!-- Manage Group -->
     <string name="save">Enregistrer</string>
@@ -48,4 +49,5 @@
     <string name="page_message">Message</string>
     <string name="en_tete_message">Message envoyé :</string>
     <string name="btn_del_message">Supprimer le message</string>
+
 </resources>
