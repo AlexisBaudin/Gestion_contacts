@@ -21,7 +21,7 @@ import java.util.Locale;
 public class SmsActivity extends AppCompatActivity {
 
     private int intentContactPosition;
-    private int intentGroupPosition;
+    private Group intentGroupExtra;
 
     private SMS_Sender smsSender;
 
@@ -156,9 +156,9 @@ public class SmsActivity extends AppCompatActivity {
         destGroupLayout = findViewById(R.id.layout_dest_group);
         destinatairesGroup = new ArrayList<Group>();
 
-        intentGroupPosition = getIntent().getIntExtra("INTENT_GROUP_POSITION", -1);
-        if (intentGroupPosition >= 0) {
-            destinatairesGroup.add(MainActivity.gm.getObjectsList().get(intentGroupPosition));
+        intentGroupExtra = (Group) getIntent().getSerializableExtra("EXTRA_GROUP");
+        if (intentGroupExtra != null) {
+            destinatairesGroup.add(intentGroupExtra);
             destGroupLayout.setVisibility(View.VISIBLE);
         }
 

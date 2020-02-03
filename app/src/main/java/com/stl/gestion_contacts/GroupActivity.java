@@ -17,7 +17,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class GroupActivity extends AppCompatActivity {
 
     private Group group;
-    private int index;
     private SMS_Sender sms_sender;
 
     private ListView listView;
@@ -55,7 +54,7 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(GroupActivity.this, SmsActivity.class);
-                intent.putExtra("INTENT_GROUP_POSITION", index);
+                intent.putExtra("EXTRA_GROUP", group);
                 GroupActivity.this.startActivity(intent);
             }
         });
@@ -95,7 +94,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     public void delGroup (View view) {
-        MainActivity.gm.removeObject(index);
+        MainActivity.gm.removeObject(group);
         MainActivity.cgm.remove(this.group.getName());
         finish();
     }
