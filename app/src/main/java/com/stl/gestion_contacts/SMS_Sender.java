@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class SMS_Sender {
                         MainActivity.cm.modifyObject(index, contact);
                     }
                 }
-                int index = MainActivity.gm.getObjectsList().indexOf(g);
+                int index = indexGroup(g);
                 g.setLastMsgDate(new Date());
                 MainActivity.gm.modifyObject(index, g);
             }
@@ -82,6 +83,16 @@ public class SMS_Sender {
             alertDialog.show();
 
         }
+    }
+
+    private int indexGroup (Group group) {
+        for (int i = 0 ; i < MainActivity.gm.getObjectsList().size() ; i++) {
+            Group g = MainActivity.gm.getObjectsList().get(i);
+            if (g.getName().equals(group.getName())) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static void save_sms (String sms, ArrayList<Contact> contactList, ArrayList<Group> groupList) {

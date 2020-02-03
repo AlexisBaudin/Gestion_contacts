@@ -299,7 +299,6 @@ public class SmsActivity extends AppCompatActivity {
         else {
             String sms = smsEditText.getText().toString();
             smsSender.send_SMS(sms, destinatairesContact, destinatairesGroup);
-
             refreshSearchView(searchContact, searchContactAdapter);
             refreshSearchView(searchGroup, searchGroupAdapter);
             finish();
