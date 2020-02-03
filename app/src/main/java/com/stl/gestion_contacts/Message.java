@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class Message implements Serializable {
+public class Message implements Serializable,Printable {
 
     private String msg;
     private Date date;
@@ -37,4 +37,8 @@ public class Message implements Serializable {
         return destinataires;
     }
 
+    @Override
+    public String getText() {
+        return msg;
+    }
 }

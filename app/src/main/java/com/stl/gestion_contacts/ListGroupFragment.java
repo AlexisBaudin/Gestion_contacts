@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -19,6 +20,7 @@ public class ListGroupFragment extends MainFragment {
     private static ListView groupListView;
     private Context context;
     Spinner spinner;
+    View view;
 
     public ListGroupFragment(Context context) {
         this.context = context;
@@ -27,7 +29,11 @@ public class ListGroupFragment extends MainFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_group_list, container, false);
+        view = inflater.inflate(R.layout.fragment_group_list, container, false);
+
+        TextView nothing = view.findViewById(R.id.nothing);
+        if (!MainActivity.gm.getObjectsList().isEmpty())
+            nothing.setVisibility(View.GONE);
 
         groupListView = view.findViewById(R.id.groupListView);
         groupListView.setAdapter(MainActivity.gm.getObjectAdapter());
@@ -39,6 +45,8 @@ public class ListGroupFragment extends MainFragment {
         });
         spinner = view.findViewById(R.id.spinner);
         setSpinnerSort();
+        if (MainActivity.gm.getObjectsList().isEmpty())
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -65,9 +73,16 @@ public class ListGroupFragment extends MainFragment {
         return view;
     }
 
-    public void filterGroup(String query) {
-        groupListView.setFilterText(query);
+    @Override
+    public void onResume() {
+        super.onResume();
+        TextView nothing = view.findViewById(R.id.nothing);
+        if (!MainActivity.gm.getObjectsList().isEmpty())
+            nothing.setVisibility(View.GONE);
+        else
+            nothing.setVisibility(View.VISIBLE);
     }
+
 
     public void open_group (Group group, int index) {
         Intent intent = new Intent(context, GroupActivity.class);

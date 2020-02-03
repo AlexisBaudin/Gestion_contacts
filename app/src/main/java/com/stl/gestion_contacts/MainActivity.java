@@ -71,7 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
        MenuItem item = menu.findItem(R.id.search);
        final SearchView searchView = (SearchView)item.getActionView();
-       searchView.setQueryHint("Entrez un nom");
+
+        if (currentFragment().equals(ListMessageFragment.class))
+            searchView.setQueryHint("Entrez un texte");
+        else
+            searchView.setQueryHint("Entrez un nom");
 
         searchView.onActionViewExpanded();
         searchView.setIconified(false);
@@ -86,10 +90,12 @@ public class MainActivity extends AppCompatActivity {
            public boolean onQueryTextChange(String newText) {
                if (currentFragment().equals(ListContactFragment.class)) {
                     cm.getObjectAdapter().filter(newText.toLowerCase(Locale.getDefault()));
-                }
-                else if (currentFragment().equals(ListGroupFragment.class))
+               }
+               else if (currentFragment().equals(ListGroupFragment.class))
                     gm.getObjectAdapter().filter(newText.toLowerCase(Locale.getDefault()));
-                return false;
+               else if (currentFragment().equals(ListMessageFragment.class))
+                   mm.getObjectAdapter().filter(newText.toLowerCase(Locale.getDefault()));
+               return false;
            }
        });
 
@@ -257,6 +263,14 @@ public class MainActivity extends AppCompatActivity {
                             cgm.put(g.getName(), new ObjectManager<Integer>(MainActivity.this, "group_"+name+".txt", R.layout.item_contact));
                             if (groupComp == GroupComparator.Alphabetic)
                                 sortGroup();
+                            FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+                            List<Fragment> fragments = fragmentManager.getFragments();
+                            for(Fragment fragment : fragments){
+                                if(fragment != null && fragment.getUserVisibleHint())
+                                    if (fragment instanceof ListGroupFragment) {
+                                        ((ListGroupFragment)fragment).onResume();
+                                    }
+                            }
                             dialog.dismiss();
                         }
                     }
@@ -394,6 +408,17 @@ public class MainActivity extends AppCompatActivity {
         contactComp = comp;
         InternalStorage.writeObject(CONTACT_COMPARATOR_FILENAME, comp, "MainActivity oncreate");
         sortContacts();
+    }
+
+    public static void removeByName(Group g) {
+        int i = 0;
+        for(Group gr : gm.getObjectsList()) {
+            if (g.getName().equals(gr.getName())) {
+                gm.removeObject(i);
+                return;
+            }
+            i++;
+        }
     }
 
 

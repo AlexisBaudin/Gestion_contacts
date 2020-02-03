@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -20,6 +21,7 @@ public class ListContactFragment extends MainFragment {
     private static ListView contactListView;
     private Context context;
     Spinner spinner;
+    View view;
 
     public ListContactFragment(Context context) {
         this.context = context;
@@ -28,7 +30,11 @@ public class ListContactFragment extends MainFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_contact_list, container, false);
+        view = inflater.inflate(R.layout.fragment_contact_list, container, false);
+
+        TextView nothing = view.findViewById(R.id.nothing);
+        if (!MainActivity.cm.getObjectsList().isEmpty())
+            nothing.setVisibility(View.GONE);
 
         contactListView = view.findViewById(R.id.contactListView);
         contactListView.setAdapter(MainActivity.cm.getObjectAdapter());
@@ -61,6 +67,16 @@ public class ListContactFragment extends MainFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TextView nothing = view.findViewById(R.id.nothing);
+        if (!MainActivity.cm.getObjectsList().isEmpty())
+            nothing.setVisibility(View.GONE);
+        else
+            nothing.setVisibility(View.VISIBLE);
     }
 
 

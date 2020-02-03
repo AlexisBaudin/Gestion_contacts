@@ -20,11 +20,13 @@ import java.util.Locale;
 public  class ObjectAdapter<T> extends ArrayAdapter<T> {
 
 
+    private String filterQuerry;
     private final List<T> objects;
-    private ArrayList<T> filtered = null;
+    private ArrayList<T> filtered;
     private final int layoutResource;
 
     public void filter(String charText) {
+        filterQuerry = charText;
         charText = charText.toLowerCase(Locale.getDefault());
         objects.clear();
         if (charText.length() == 0) {
@@ -38,7 +40,16 @@ public  class ObjectAdapter<T> extends ArrayAdapter<T> {
                 }
             }
         }
-        notifyDataSetChanged();
+        super.notifyDataSetChanged();
+    }
+
+   @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        filtered.clear();
+        filtered.addAll(objects);
+        if (!filterQuerry.equals(""))
+            filter(filterQuerry);
     }
 
     public ObjectAdapter(@NonNull Context context, int resource, @NonNull List<T> objects) {
@@ -47,6 +58,7 @@ public  class ObjectAdapter<T> extends ArrayAdapter<T> {
         this.filtered.addAll(objects);
         this.layoutResource = resource;
         this.objects = objects;
+        this.filterQuerry = "";
     }
 
     @NonNull
@@ -61,7 +73,7 @@ public  class ObjectAdapter<T> extends ArrayAdapter<T> {
 
         }
 
-        if (t instanceof Printable) {
+        if (t instanceof Printable && !(t instanceof  Message)) {
             TextView text = convertView.findViewById(R.id.text);
             text.setText(((Printable)(t)).getText());
 

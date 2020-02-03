@@ -94,7 +94,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     public void delGroup (View view) {
-        MainActivity.gm.removeObject(group);
+        MainActivity.removeByName(group);
         MainActivity.cgm.remove(this.group.getName());
         finish();
     }

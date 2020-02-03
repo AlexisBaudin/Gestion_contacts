@@ -6,7 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ListGroupFragment">
 
+
+        <TextView
+            android:id="@+id/nothing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Aucun groupe"
+            android:textStyle="italic"
+            android:layout_gravity="center_horizontal|center_vertical">
+
+        </TextView>
+
+
     <LinearLayout
+        android:id="@+id/orderby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

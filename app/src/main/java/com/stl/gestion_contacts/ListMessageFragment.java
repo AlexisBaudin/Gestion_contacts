@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -15,6 +16,7 @@ public class ListMessageFragment extends MainFragment {
 
     private static ListView messageListView;
     private Context context;
+    View view;
 
     public ListMessageFragment (Context context) {
         this.context = context;
@@ -23,7 +25,9 @@ public class ListMessageFragment extends MainFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_message_list, container, false);
+        view = inflater.inflate(R.layout.fragment_message_list, container, false);
+
+
 
         messageListView = view.findViewById(R.id.messageListView);
         messageListView.setAdapter(MainActivity.mm.getObjectAdapter());
@@ -35,6 +39,16 @@ public class ListMessageFragment extends MainFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TextView nothing = view.findViewById(R.id.nothing);
+        if (!MainActivity.mm.getObjectsList().isEmpty())
+            nothing.setVisibility(View.GONE);
+        else
+            nothing.setVisibility(View.VISIBLE);
     }
 
     private void open_message (int position) {

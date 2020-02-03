@@ -8,6 +8,17 @@
     tools:context=".ListMessageFragment"
     >
 
+    <TextView
+        android:id="@+id/nothing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Aucun message"
+        android:textStyle="italic"
+        android:layout_gravity="center_horizontal|center_vertical">
+
+    </TextView>
+
     <ListView
         android:id="@+id/messageListView"
         android:layout_width="wrap_content"
